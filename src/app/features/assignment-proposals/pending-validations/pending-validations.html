@@ -1,0 +1,21 @@
+<app-crud-page
+
+title="Validation des propositions"
+
+subtitle="Commission pédagogique"
+
+[columns]="columns"
+
+[data]="proposals"
+
+[showAdd]="false"
+
+[showValidate]="true"
+
+[showReject]="true"
+
+(validate)="validate($event)"
+
+(reject)="reject($event)">
+
+</app-crud-page>

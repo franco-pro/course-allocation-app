@@ -1,0 +1,55 @@
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <img src="assets/images/logo.png">
+
+        <div>
+
+            <h2>IUG</h2>
+
+            <small>Course Allocation</small>
+
+        </div>
+
+    </div>
+
+    <nav>
+
+        @for(item of menu;track item.route){
+
+        <a
+
+            [routerLink]="item.route"
+
+            routerLinkActive="active">
+
+            <img
+                [src]="item.icon"
+                alt="">
+
+            <span>
+
+                {{item.label}}
+
+            </span>
+
+        </a>
+
+        }
+
+    </nav>
+
+    <div class="bottom">
+
+        <button>
+
+            <img src="assets/images/log-out.svg" alt="">
+
+            Déconnexion
+
+        </button>
+
+    </div>
+
+</aside>

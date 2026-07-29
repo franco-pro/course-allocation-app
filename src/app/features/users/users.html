@@ -1,0 +1,37 @@
+<app-crud-page
+
+  title="Utilisateurs"
+
+  subtitle="Gestion des utilisateurs"
+
+  [columns]="columns"
+
+  [data]="users"
+
+  [total]="total"
+
+  [page]="searchDto.page!"
+
+  [limit]="searchDto.limit!"
+
+  [loading]="loading"
+
+  [showAdd]="true"
+
+  [showEdit]="true"
+
+  [showDelete]="true"
+
+  (searchChange)="onSearch($event)"
+
+  (pageChange)="onPage($event)"
+
+  (sortChange)="onSort($event)"
+
+  (add)="create()"
+
+  (edit)="edit($event)"
+
+  (delete)="delete($event)">
+
+</app-crud-page>

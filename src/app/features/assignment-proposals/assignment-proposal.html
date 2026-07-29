@@ -1,0 +1,16 @@
+<app-crud-page
+  title="Mes propositions"
+  subtitle="Liste des propositions"
+
+  [columns]="columns"
+  [data]="proposals"
+
+  [showEdit]="true"
+  [showDelete]="true"
+  [showSubmit]="true"
+
+  (add)="create()"
+  (edit)="edit($event)"
+  (delete)="delete($event)"
+  (submit)="submit($event)">
+</app-crud-page>

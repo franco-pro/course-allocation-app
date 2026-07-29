@@ -1,0 +1,115 @@
+<h2 mat-dialog-title>
+    {{data ? 'Modifier':'Nouvelle proposition'}}
+</h2>
+
+<mat-dialog-content>
+<form [formGroup]="form">
+<mat-form-field appearance="outline">
+<mat-label>
+Enseignant
+</mat-label>
+
+<mat-select formControlName="enseignantMatricule">
+@for(t of teachers;track t.matricule){
+<mat-option [value]="t.matricule">
+{{t.nom}} {{t.prenom}}
+</mat-option>
+}
+</mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+<mat-label>
+Matière
+</mat-label>
+
+<mat-select formControlName="matiereId">
+
+@for(m of subjects;track m.id_matiere){
+
+<mat-option [value]="m.id_matiere">
+
+{{m.nom}}
+
+</mat-option>
+
+}
+
+</mat-select>
+
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+
+    <mat-label>
+
+        Année universitaire
+
+    </mat-label>
+
+    <mat-select formControlName="anneeId">
+
+        @for(a of schoolYears;track a.id_annee){
+
+            <mat-option [value]="a.id_annee">
+
+                {{a.id_annee}}
+
+            </mat-option>
+
+        }
+
+    </mat-select>
+
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+
+<mat-label>
+
+Classes
+
+</mat-label>
+
+<mat-select
+multiple
+formControlName="classeIds">
+
+@for(c of classes;track c.id_classe){
+
+<mat-option [value]="c.id_classe">
+
+{{c.nom}}
+
+</mat-option>
+
+}
+
+</mat-select>
+
+</mat-form-field>
+
+</form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+<button
+mat-button
+mat-dialog-close>
+
+Annuler
+
+</button>
+
+<button
+mat-flat-button
+color="primary"
+(click)="save()">
+
+Enregistrer
+
+</button>
+
+</mat-dialog-actions>

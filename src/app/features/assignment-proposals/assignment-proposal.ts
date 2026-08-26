@@ -73,7 +73,9 @@ this.dialog.open(
 ProposalDialogComponent,
 
 {
-width:'900px',
+width: '700px',        // Augmente la largeur (ex: 800px, 80vw, 60%)
+    height: 'auto',        // S'adapte au contenu, ou fixez une taille (ex: '600px')
+    maxWidth: '80vw', 
 
 }
 
@@ -97,7 +99,9 @@ ProposalDialogComponent,
 
 {
 
-width:'900px',
+width: '700px',        // Augmente la largeur (ex: 800px, 80vw, 60%)
+    height: 'auto',        // S'adapte au contenu, ou fixez une taille (ex: '600px')
+    maxWidth: '80vw', 
 
 data:row
 

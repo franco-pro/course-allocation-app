@@ -1,20 +1,16 @@
+
+:host {
+    border:4px solid #07e978;
+}
+
+
 mat-dialog-content{
-
-min-width:700px;
-
+min-width: 200px;
 padding-top:20px;
 
 }
 
-form{
 
-display:grid;
-
-grid-template-columns:1fr 1fr;
-
-gap:20px;
-
-}
 
 mat-form-field{
 

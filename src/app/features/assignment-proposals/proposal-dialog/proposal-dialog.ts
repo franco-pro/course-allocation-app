@@ -4,24 +4,22 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 
-import { TeachersService } from '../../teachers/services/teachers.service';
-import { SubjectsService } from '../../matieres/services/matiere.service';
-import { ClassesService } from '../../classes/services/classes.service';
 import { AssignmentProposalService } from '../services/proposal.service';
 import { SchoolYear } from '../../../core/models/year.model';
-import { Class } from '../../../core/models/classe.model';
-import { Subject } from '../../../core/models/matiere.model';
-import { Teacher } from '../../../core/models/teachers.model';
+
+
 import { SchoolYearsService } from '../../year/services/year.service';
-import { AuthService } from '../../../core/auth/authService';
+
 import { proposalListDto } from '../../../core/models/proposalListDto';
+import { AcademicContextComponent } from '../../../shared/academic-context/academic-context';
+import { AcademicContextConfig, DEFAULT_ACADEMIC_CONTEXT_CONFIG } from '../../../shared/academic-context/models/academic-context-config';
+import { AcademicContextStore } from '../../../shared/academic-context';
 
 
 @Component({
@@ -30,35 +28,45 @@ import { proposalListDto } from '../../../core/models/proposalListDto';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
 
+    AcademicContextComponent,
   ],
   templateUrl: './proposal-dialog.html',
   styleUrl: './proposal-dialog.scss',
 })
 export class ProposalDialogComponent implements OnInit {
-  teachers: Teacher[] = [];
-  subjects: Subject[] = [];
-  classes: Class[] = [];
-  schoolYears: SchoolYear[] = [];
+  
 
   // 1. Déclarez la propriété ici sans lui donner de valeur immédiatement
   form!: FormGroup;
 
+   readonly academicContextConfig: AcademicContextConfig = {
+    ...DEFAULT_ACADEMIC_CONTEXT_CONFIG,
+
+    levelRequiresFiliere: true,
+    classRequiresLevel: true,
+    subjectRequiresClass: true,
+    teacherRequiresSubject: false,
+
+    multipleClasses: true,
+   }
   constructor(
-    private fb: FormBuilder,
-    private teacherService: TeachersService,
-    private subjectService: SubjectsService,
-    private classService: ClassesService,
-    private proposalService: AssignmentProposalService,
-    private dialogRef: MatDialogRef<ProposalDialogComponent>,
-    private readonly schoolYearService: SchoolYearsService,
-    private authService: AuthService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+     private readonly fb: FormBuilder,
+    private readonly proposalService: AssignmentProposalService,
+    private readonly dialogRef: MatDialogRef<ProposalDialogComponent>,
+  
+
+    public readonly academicContextStore: AcademicContextStore,
+
+    @Inject(MAT_DIALOG_DATA)
+    public data: any,
+    
   ) {
     // 2. Initialisez impérativement le formulaire ICI dans le constructeur
     this.form = this.initializeForm();
@@ -66,79 +74,27 @@ export class ProposalDialogComponent implements OnInit {
 
   private initializeForm() {
     return this.fb.group({
-      enseignantMatricule: ['', Validators.required],
-      matiereId: [null, Validators.required],
       anneeId: ['', Validators.required],
-      classeIds: [[], Validators.required],
     });
   }
 
-  ngOnInit(): void {
+ngOnInit(): void {
 
-  forkJoin({
+  if (this.data?.id) {
 
-    teachers: this.teacherService.findAll(),
+    if (this.data.status !== 'DRAFT') {
 
-    subjects: this.subjectService.findAll(),
+      alert(
+        "Cette proposition n'est pas modifiable car elle est déjà soumise ou validée."
+      );
 
-    classes: this.classService.findAll(),
-
-    schoolYears: this.schoolYearService.findAll(),
-
-  }).subscribe({
-
-    next: (result) => {
-
-      this.teachers = result.teachers;
-
-      this.subjects = result.subjects as Subject[];
-
-      this.classes = result.classes as Class[];
-
-      this.schoolYears = result.schoolYears;
-
-      // =============================
-      // MODE EDITION
-      // =============================
-
-      if (this.data?.id) {
-        console.log("Editing proposal with ID:", this.data);
-        if(this.data.status !== 'DRAFT'){
-          //display popup message to inform user that the proposal is not editable
-          alert("Cette proposition n'est pas modifiable car elle est déjà soumise ou validée.");
-          this.form.disable();
-        }
-
-        this.loadProposal(this.data.id);
-
-        return;
-
-      }
-
-      // =============================
-      // MODE CREATION
-      // =============================
-
-      if (this.schoolYears.length) {
-
-        this.form.patchValue({
-
-          anneeId:
-            this.schoolYears[this.schoolYears.length - 1].id_annee,
-
-        });
-
-      }
-
-    },
-
-    error: (err) => {
-
-      console.error(err);
+      this.form.disable();
 
     }
 
-  });
+    this.loadProposal(this.data.id);
+
+  }
 
 }
 
@@ -150,7 +106,7 @@ private loadProposal(id: number): void {
 
       console.log("Proposal loaded", proposal);
 
-      this.form.patchValue(proposal);
+      this.form.patchValue({ anneeId: proposal.anneeId });
 
     },
 
@@ -166,22 +122,56 @@ private loadProposal(id: number): void {
 
 
 
-  save() {
-    if (this.form.invalid) {
-      console.log('Formulaire invalide', this.form);
-      this.form.markAllAsTouched();
-      return;
-    }
+ save(): void {
 
-    if (this.data) {
-      // Mode Édition
-      this.proposalService.update(this.data.id, this.form.value).subscribe(() => {
-        this.dialogRef.close(true);
-      });
-    } else {
-      this.proposalService.create(this.form.value).subscribe(() => {
-        this.dialogRef.close(true);
-      });
-    }
+  const context = this.academicContextStore.context();
+
+  if (
+    context.academicYearId== null||
+    context.subjectId == null ||
+    context.teacherMatricule== null ||
+    context.classIds ==null ||
+    context.classIds.length === 0
+  ) {
+
+    alert("Veuillez compléter le contexte académique.");
+
+    return;
   }
+
+  const dto = {
+
+    anneeId: context.academicYearId,
+
+    enseignantMatricule: context.teacherMatricule,
+
+    matiereId: context.subjectId,
+
+    classeIds: context.classIds,
+
+  };
+
+  console.log("dto proposition:", dto);
+
+  if (this.data?.id) {
+
+    this.proposalService.update(this.data.id, dto)
+      .subscribe(() => {
+
+        this.dialogRef.close(true);
+
+      });
+
+  } else {
+
+    this.proposalService.create(dto)
+      .subscribe(() => {
+
+        this.dialogRef.close(true);
+
+      });
+
+  }
+
+}
 }

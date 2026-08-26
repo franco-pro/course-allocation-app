@@ -3,6 +3,7 @@ import { Teacher } from "../../../core/models/teachers.model";
 import { ApiService } from "../../../core/services/api.service";
 import { SearchResponse } from "../../../core/models/searchResponse";
 import { SearchTeacherDTO } from "../../../core/models/searchTeacherDTO";
+import { of, tap } from "rxjs";
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +11,18 @@ import { SearchTeacherDTO } from "../../../core/models/searchTeacherDTO";
 export class TeachersService extends ApiService {
 
   private endpoint = 'teachers';
+  private teacherCache?: Teacher[];
+   
 
   override findAll<T = Teacher>() {
-    return super.findAll<T>(this.endpoint);
+    if(this.teacherCache){
+      return of(this.teacherCache as T[]);
+    }
+    return super.findAll<T>(this.endpoint).pipe(
+      tap((teachers: T[]) => {
+        this.teacherCache = teachers as Teacher[];
+      })
+    );
   }
 
   override findOne<T = Teacher>(endpoint: string, id: string | number) {

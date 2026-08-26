@@ -48,8 +48,8 @@ reject(id: number, body: { comment?: string }) {
     return super.findOne<T>(endpoint, id);
   }
 
-  override create<T = UserInterface>(
-    ...args: [dto: Partial<UserInterface>] | [endpoint: string, dto: Partial<UserInterface>]
+  override create<T = any>(
+    ...args: [dto: Partial<any>] | [endpoint: string, dto: Partial<any>]
   ) {
     const [endpoint, dto] = args.length === 1 ? [this.endpoint, args[0]] : args;
     return super.create<T>(endpoint, dto);

@@ -30,4 +30,8 @@ export class LevelsService extends ApiService{
         );
     }
 
+    getLevelById(id: string){
+        return super.findOne<Level>(this.endpoint, id);
+    }
+
 }

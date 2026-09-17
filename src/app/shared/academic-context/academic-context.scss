@@ -1,6 +1,7 @@
 :host {
     display: block;
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
 }
 
 .academic-context-card {
@@ -37,7 +38,7 @@
 
     display: grid;
 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: 1fr 1fr ;
 
     gap: 16px;
 

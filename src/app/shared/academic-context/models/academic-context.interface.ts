@@ -3,7 +3,7 @@ export interface AcademicContext {
 
   levelId?: number | null;
 
-  classId?: number | null;
+  classIds?: number[];
 
   subjectId?: number | null;
 

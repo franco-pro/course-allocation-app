@@ -19,19 +19,18 @@
         [formGroup]="loginForm"
         (ngSubmit)="login()">
 
-            <mat-form-field appearance="outline">
+            <mat-form-field class="form-field" appearance="fill" >
 
                 <mat-label>Matricule</mat-label>
 
-                <input
-                matInput
+                <input matInput
                 formControlName="matricule">
 
                 <mat-icon matPrefix>badge</mat-icon>
 
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
 
                 <mat-label>Mot de passe</mat-label>
 
@@ -56,15 +55,10 @@
 
             </mat-form-field>
 
-            <mat-checkbox formControlName="remember">
-
-                Se souvenir de moi
-
-            </mat-checkbox>
-
             <button
             mat-flat-button
             color="primary"
+            type="submit"
             class="login-button">
 
                 Se connecter

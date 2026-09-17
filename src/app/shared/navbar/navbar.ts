@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../core/auth/authService';
 
 @Component({
   selector: 'app-navbar',
@@ -6,4 +7,14 @@ import { Component } from '@angular/core';
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss'
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  constructor(private readonly authService: AuthService){}
+
+  get firstName():string {
+    console.log("name:", this.authService.getCurrentUser());
+    
+    return this.authService.getCurrentUser()?.prenom ?? 'Utilisateur';
+  }
+
+  
+}

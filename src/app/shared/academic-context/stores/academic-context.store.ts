@@ -10,7 +10,7 @@ export class AcademicContextStore {
     academicYearId: null,
     filiereId: null,
     levelId: null,
-    classId: null,
+    classIds: [],
     subjectId: null,
     teacherMatricule: null,
   });
@@ -21,7 +21,7 @@ export class AcademicContextStore {
 
   readonly levelId = computed(() => this.context().levelId);
 
-  readonly classId = computed(() => this.context().classId);
+  readonly classIds = computed(() => this.context().classIds);
 
   readonly subjectId = computed(() => this.context().subjectId);
 
@@ -43,7 +43,7 @@ export class AcademicContextStore {
 
       levelId: null,
 
-      classId: null,
+      classIds: [],
 
       subjectId: null,
 

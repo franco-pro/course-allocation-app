@@ -16,7 +16,7 @@
 
     <nav>
 
-        @for(item of menu;track item.route){
+        @for(item of visibleMenu; track item.route){
 
         <a
 
@@ -42,13 +42,30 @@
 
     <div class="bottom">
 
-        <button>
+        <button type="button" class="btn-logout-principal" (click)="openLogoutModal()">
 
             <img src="assets/images/log-out.svg" alt="">
 
-            Déconnexion
+            <span>Déconnexion</span>
 
         </button>
+
+        @if(showLogoutModal){
+            <div class="modal-overlay" (click)="closeLogoutModal()">
+                <div class="logout-modal" (click)="$event.stopPropagation()">
+                    <div class="modal-icon">
+                        <img src="assets/images/log-out.png" alt="">
+                    </div>
+                    <h3>Confirmation de déconnexion</h3>
+                    <p>Êtes-vous sûr de vouloir vous déconnecter? votre session sera fermée, et vous perdrez tous les changements non enregistrés.</p>
+                    <div class="modal-actions">
+                        <button class="btn-cancel" type="button" (click)="closeLogoutModal()">Annuler</button>
+                        <button class="btn-confirm" type="button" (click)="logout()">Se déconnecter</button>
+                    </div>
+
+                </div>
+            </div>
+        }
 
     </div>
 

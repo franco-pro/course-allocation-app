@@ -10,4 +10,5 @@ export interface UserInterface {
   ACTIVE: number;
   IS_TEACHER: number;
   MATRICULE_TEACHER?: string;
+  prenom?: string;
 }

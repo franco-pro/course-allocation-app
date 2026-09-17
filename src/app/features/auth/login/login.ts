@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +26,7 @@ import { Router } from '@angular/router';
     MatFormFieldModule
   ],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
 })
 export class LoginComponent {
 
@@ -53,7 +53,24 @@ export class LoginComponent {
     password:this.loginForm.value.password!
   })
   .subscribe({
-    next:()=>{
+    next:(response)=>{
+      console.log('LOGIN OK');
+  console.log('TOKEN:', response.accessToken);
+
+  console.log(
+    'Token localStorage:',
+    localStorage.getItem('access_token')
+  );
+
+   console.log(
+    'Token valide ?',
+    this.authService.isTokenValid()
+  );
+
+  console.log(
+    'isAuthenticated ?',
+    this.authService.isAuthenticated
+  );
       this.router.navigate(['/dashboard']);
     },
     error:(err)=>{
